@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+    <h1 class="text-center mb-4">Список всех собак</h1>
+    <p class="text-center">Здесь вы можете найти информацию о собаках разных пород.</p>
+
+    <div class="container">
+        <div class="row">
+            {% for dog in dogs %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if dog.image %}
+                            <img src="{{ dog.image.url }}" alt="{{ dog.name }}" class="card-img-top" style="max-height: 150px;">
+                        {% else %}
+                            <img src="{% static 'images/default_dog.png' %}" alt="Default Dog" class="card-img-top" style="max-height: 150px;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">{{ dog.name }}</h5>
+                            <p class="card-text mb-2"><small>Порода: {{ dog.breed.name }}</small></p>
+                            <p class="card-text mb-2"><small>Возраст: {{ dog.age }} лет</small></p>
+                            <p class="card-text mb-2">{{ dog.description }}</p>
+                            <a href="{% url 'dogs:dog_read' dog.pk %}" class="btn btn-primary">Подробнее</a>
+                            {% if user.is_authenticated %}
+                                <button class="btn btn-success" onclick="addToProfile({{ dog.pk }})">Добавить в профиль</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function addToProfile(dogId) {
+            console.log(`Добавление собаки с ID: ${dogId}`); // Отладочное сообщение
+            fetch(`/dogs/${dogId}/add_to_profile/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Сетевая ошибка');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Ошибка:', error); // Логирование ошибок
+                alert('Произошла ошибка при добавлении собаки в профиль.');
+            });
+        }
+    </script>
+
+{% endblock %}
+
