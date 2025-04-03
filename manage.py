@@ -42,7 +42,7 @@ def create_database():
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'my_project.settings') # Исправлено имя проекта
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings') # Исправлено имя проекта
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
