@@ -1,11 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from .forms import LoginForm, RegisterForm
 from dogs.models import Dog
 from django.contrib import messages
-from django.urls import reverse
 
 @login_required
 def user_profile(request):
@@ -56,15 +54,3 @@ def register(request):
 def logout(request):
     django_logout(request)  # Выход из системы
     return redirect('dogs:index')  # Перенаправляем на главную страницу
-
-@login_required
-def remove_dog_from_profile(request, pk):
-    dog = get_object_or_404(Dog, pk=pk, owner=request.user)
-    title = "Удаление собаки"
-
-    if request.method == 'POST':
-        dog.delete()
-        return redirect(reverse('users:user_profile'))
-
-    context = {'dog': dog, 'title': title}
-    return render(request, 'users/remove_dog.html', context)  # Создайте этот шаблон!

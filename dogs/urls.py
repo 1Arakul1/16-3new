@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import (
     add_dog_to_profile,
-    remove_dog_from_profile,
     index,
     breeds,
     dogs_list,
@@ -9,7 +8,8 @@ from .views import (
     dog_update,
     dog_delete,
     dog_read,
-    all_dogs
+    all_dogs,
+    remove_dog_from_profile
 )
 
 app_name = 'dogs'
